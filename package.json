@@ -1,0 +1,21 @@
+{
+  "name": "apollo-example",
+  "private": true,
+  "scripts": {
+    "start": "meteor run"
+  },
+  "meteor": {
+    "mainModule": {
+      "client": "client/main.js",
+      "server": "server/main.js"
+    }
+  },
+  "dependencies": {
+    "@babel/runtime": "7.0.0-beta.55",
+    "apollo-boost": "^0.1.16",
+    "apollo-client": "^2.4.2",
+    "apollo-server-express": "^2.0.7",
+    "graphql": "^0.13.1",
+    "meteor-node-stubs": "^0.4.1"
+  }
+}
