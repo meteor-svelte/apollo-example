@@ -1,8 +1,8 @@
-ecmascript@0.11.1
-es5-shim@4.8.0
+ecmascript@0.12.4
 meteor-base@1.4.0
-random
-shell-server@0.3.1
-standard-minifier-css@1.4.1
-standard-minifier-js@2.3.4
+random@1.1.0
+shell-server@0.4.0
+standard-minifier-css@1.5.2
+standard-minifier-js@2.4.0
+
 svelte:compiler
