@@ -4,16 +4,16 @@
       <li>
         <Task
           {...task}
-          on:remove="removeTask(task.id)"
-          on:toggle="toggleTask(task.id)" />
+          on:remove="{() => removeTask(task.id)}"
+          on:toggle="{() => toggleTask(task.id)}" />
       </li>
     {:else}
       The task list is empty!
     {/each}
   </ul>
 
-  <form on:submit="addTask(event)">
-    <input bind:value="description" />
+  <form on:submit|preventDefault={addTask}>
+    <input bind:value={description} />
     <button>Add Task</button>
   </form>
 </div>
@@ -55,6 +55,7 @@
 </style>
 
 <script>
+  import { onMount } from "svelte";
   import apollo from "./apollo.js";
 
   import {
@@ -69,74 +70,61 @@
     removeTaskFromList
   } from "./cache-helpers.js";
 
-  export default {
-    oncreate() {
-      const observable = apollo.watchQuery({
-        query: GET_TASKS
-      });
+  import Task from "./Task.svelte";
 
-      this.subscription = observable.subscribe({
-        next: ({ data }) => {
-          this.set({ tasks: data.tasks });
-        }
-      });
-    },
+  let tasks = [];
+  let description = "";
 
-    ondestroy() {
-      this.subscription.unsubscribe();
-    },
+  onMount(() => {
+    const observable = apollo.watchQuery({
+      query: GET_TASKS
+    });
 
-    methods: {
-      addTask(event) {
-        event.preventDefault();
-        const description = this.get().description.trim();
-
-        if (description.length < 1) {
-          return;
-        }
-
-        apollo.mutate({
-          mutation: ADD_TASK,
-          variables: { description },
-
-          update(cache, { data: { addTask } }) {
-            addTaskToList(cache, addTask);
-          }
-        });
-
-        this.set({ description: "" });
-      },
-
-      removeTask(id) {
-        apollo.mutate({
-          mutation: REMOVE_TASK,
-          variables: { id },
-
-          update(cache, { data: { removeTask } }) {
-            if (removeTask) {
-              removeTaskFromList(cache, id);
-            }
-          }
-        });
-      },
-
-      toggleTask(id) {
-        apollo.mutate({
-          mutation: TOGGLE_TASK,
-          variables: { id }
-        });
+    const subscription = observable.subscribe({
+      next: ({ data }) => {
+        tasks = data.tasks;
       }
-    },
+    });
 
-    data() {
-      return {
-        tasks: [],
-        description: ""
-      };
-    },
+    return () => {
+      subscription.unsubscribe();
+    };
+  });
 
-    components: {
-      Task: "./Task.svelte"
+  function addTask() {
+    if (description.length < 1) {
+      return;
     }
-  };
+
+    apollo.mutate({
+      mutation: ADD_TASK,
+      variables: { description: description.trim() },
+
+      update(cache, { data: { addTask } }) {
+        addTaskToList(cache, addTask);
+      }
+    });
+
+    description = "";
+  }
+
+  function removeTask(id) {
+    apollo.mutate({
+      mutation: REMOVE_TASK,
+      variables: { id },
+
+      update(cache, { data: { removeTask } }) {
+        if (removeTask) {
+          removeTaskFromList(cache, id);
+        }
+      }
+    });
+  }
+
+  function toggleTask(id) {
+    apollo.mutate({
+      mutation: TOGGLE_TASK,
+      variables: { id }
+    });
+  }
 </script>

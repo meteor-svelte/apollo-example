@@ -5,4 +5,4 @@ shell-server@0.4.0
 standard-minifier-css@1.5.2
 standard-minifier-js@2.4.0
 
-svelte:compiler
+svelte:compiler@3.0.0_1
