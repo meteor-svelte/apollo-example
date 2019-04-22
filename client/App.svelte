@@ -136,7 +136,7 @@
     },
 
     components: {
-      Task: "./Task.html"
+      Task: "./Task.svelte"
     }
   };
 </script>
