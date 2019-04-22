@@ -2,13 +2,14 @@
   <input
     type="checkbox"
     checked={done}
-    on:change="onToggle()">
+    on:change={onToggle}
+  >
 
   <div class="description">
     {description}
   </div>
 
-  <button on:click="fire('remove')">
+  <button on:click={onRemove}>
     Remove
   </button>
 </div>
@@ -29,11 +30,18 @@
 </style>
 
 <script>
-  export default {
-    methods: {
-      onToggle() {
-        this.fire("toggle", this.get().id);
-      }
-    }
-  };
+  import { createEventDispatcher } from "svelte";
+
+  export let done = false;
+  export let description = "";
+
+  const dispatch = createEventDispatcher();
+
+  function onRemove() {
+    dispatch("remove");
+  }
+
+  function onToggle() {
+    dispatch("toggle");
+  }
 </script>

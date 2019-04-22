@@ -5,5 +5,6 @@ random@1.1.0
 shell-server@0.4.0
 standard-minifier-css@1.5.3
 standard-minifier-js@2.4.1
+static-html@1.2.2
 
-svelte:compiler
+svelte:compiler@3.0.0_1
